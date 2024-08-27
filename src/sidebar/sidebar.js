@@ -6,20 +6,21 @@ const Sidebar = forwardRef(({ steps, stepShown, answerShown }, ref) => {
 
     useEffect(() => {
         if (stepsRef.current) {
-            const lastChild = stepsRef.current.lastElementChild;
-            if (lastChild) {
-                lastChild.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }
+            stepsRef.current.scrollTop = stepsRef.current.scrollHeight;
         }
     }, [steps]);
 
     useImperativeHandle(ref, () => ({
         scrollToBottom: () => {
             if (stepsRef.current) {
-                const lastChild = stepsRef.current.lastElementChild;
-                if (lastChild) {
-                    lastChild.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                }
+                // 直接设置 scrollTop 为 scrollHeight
+                // stepsRef.current.scrollTop = stepsRef.current.scrollHeight;
+                
+                // 如果需要平滑滚动，可以使用以下代码替代上面的直接设置
+                stepsRef.current.scrollTo({
+                    top: stepsRef.current.scrollHeight,
+                    behavior: 'smooth'
+                });
             }
         }
     }));
@@ -29,7 +30,7 @@ const Sidebar = forwardRef(({ steps, stepShown, answerShown }, ref) => {
             <h1 className="text-2xl font-bold mb-4">Steps</h1>
             <p className="text-base mb-4">A specific task in vim</p>
 
-            <div ref={stepsRef} className="flex-grow overflow-auto scrollbar-hide">
+            <div className="flex-grow overflow-auto scrollbar-hide" ref={stepsRef}>
                 <div className="steps">
                     <Steps steps={steps} stepShown={stepShown} answerShown={answerShown} />
                 </div>

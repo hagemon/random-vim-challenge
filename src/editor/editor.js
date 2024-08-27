@@ -4,7 +4,6 @@ import Editor from '@monaco-editor/react';
 function VimEditor({ nextStep, showAnswer, editorRef }) {
     const [defaultValue, setDefaultValue] = useState('// Loading...');
 
-
     useEffect(() => {
         fetch('demo.json')
             .then(response => response.text())
@@ -20,21 +19,15 @@ function VimEditor({ nextStep, showAnswer, editorRef }) {
             }
         });
 
-        // Add global input method event listeners
-        const handleCompositionStart = () => {
-            if (editorRef.current) {
-                editorRef.current.updateOptions({ readOnly: true });
-            }
-        };
+        const compositionStart = () => {
+            editorRef.current.updateOptions({ readOnly: true });
+        }
+        const compositionEnd = () => {
+            editorRef.current.updateOptions({ readOnly: false });
+        }
 
-        const handleCompositionEnd = () => {
-            if (editorRef.current) {
-                editorRef.current.updateOptions({ readOnly: false });
-            }
-        };
-
-        document.addEventListener('compositionstart', handleCompositionStart);
-        document.addEventListener('compositionend', handleCompositionEnd);
+        editor.onDidCompositionStart(compositionStart);
+        editor.onDidCompositionEnd(compositionEnd);
 
 
         window.require(["monaco-vim"], function (MonacoVim) {
@@ -53,7 +46,7 @@ function VimEditor({ nextStep, showAnswer, editorRef }) {
                         if (statusInput) {
                             statusInput.setAttribute('autocomplete', 'nope');
                             statusInput.setAttribute('name', 'new-value');
-                            observer.disconnect(); // 设置完属性后停止观察
+                            observer.disconnect(); // 设置完属性停止观察
                         }
                     }
                 });
@@ -61,8 +54,7 @@ function VimEditor({ nextStep, showAnswer, editorRef }) {
             const config = { childList: true, subtree: true };
             observer.observe(statusNode, config);
             return () => {
-                document.removeEventListener('compositionstart', handleCompositionStart);
-                document.removeEventListener('compositionend', handleCompositionEnd);
+
             };
         });
         editor.focus()
@@ -78,8 +70,6 @@ function VimEditor({ nextStep, showAnswer, editorRef }) {
                 onMount={handleEditorDidMount}
                 defaultValue={defaultValue}
                 theme="vs-dark"
-                onCompositionStart={() => { console.log('compositionstart') }}
-                onCompositionEnd={() => { console.log('compositionend') }}
                 options={{
                     minimap: {
                         enabled: false,
@@ -93,6 +83,7 @@ function VimEditor({ nextStep, showAnswer, editorRef }) {
                     dragAndDrop: false,
                     contextmenu: false,
                     mouseWheelScrollSensitivity: 0,
+                    readOnlyMessage: { value: "Only support English input for now" }
                 }}
             />
             <div className="status-node"></div>

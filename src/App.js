@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import './App.css';
 import VimEditor from './editor/editor';
 import Header from './header/header';
@@ -19,27 +19,31 @@ const steps = [
 ]
 
 function App() {
-  const [stepShown, setStepShown] = useState(7)
-  const [answerShown, setAnswerShown] = useState(6)
+  const [stepShown, setStepShown] = useState(0)
+  const [answerShown, setAnswerShown] = useState(-1)
   const [showDialog, setShowDialog] = useState(false)
   const editorRef = useRef(null)
   const dialogRef = useRef(null)
   const sidebarRef = useRef(null)
 
-  const focusEditor = () => {
+  const focusEditor = useCallback(() => {
     if (editorRef.current) {
       if (!showDialog) {
         editorRef.current.focus()
-      } else {
-        if (dialogRef.current) {
-          dialogRef.current.focus()
-        }
+      } else if (dialogRef.current) {
+        dialogRef.current.focus()
       }
     } else {
       console.log('editor not mounted')
     }
-  }
-  document.addEventListener('click', focusEditor)
+  }, [showDialog, editorRef, dialogRef]);
+
+  useEffect(() => {
+    document.addEventListener('click', focusEditor)
+    return () => {
+      document.removeEventListener('click', focusEditor)
+    }
+  }, [focusEditor]);
 
   const nextStep = useCallback(() => {
     setStepShown(current => {
