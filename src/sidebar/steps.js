@@ -10,7 +10,7 @@ export default function Steps({ steps, stepShown, answerShown }) {
                 <div className="flex flex-col gap-2">
                     {steps.slice(0, stepShown + 1).map((step, index) => (
                         <Checkbox
-                            key={step.step}
+                            key={index}
                             value={step}
                             disabled
                             checked={index < stepShown}
@@ -18,14 +18,14 @@ export default function Steps({ steps, stepShown, answerShown }) {
                         >
                             <div className="flex w-full items-center justify-between ">
                                 <div className="text-sm/6">
-                                    <p className="font-semibold text-white">{step.step}</p>
+                                    <p className="font-semibold text-white">{index + 1}/{steps.length}</p>
                                     <div className="flex gap-2 text-white/50 pb-1">
-                                        <div>{step.content}</div>
+                                        <div>{step.description}</div>
                                     </div>
                                     {index <= answerShown && (
                                         <div className="flex gap-2 text-white/50">
                                             <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                                                {step.answer}
+                                                {step.command}
                                             </span>
                                         </div>
                                     )}

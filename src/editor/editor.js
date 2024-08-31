@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 
-function VimEditor({ nextStep, showAnswer, editorRef }) {
+
+function VimEditor({ nextStep, showAnswer, editorRef, code, language, currentStepRef, buffer }) {
     const [defaultValue, setDefaultValue] = useState('// Loading...');
+    const [status, setStatus] = useState("normal");
 
     useEffect(() => {
-        fetch('demo.json')
-            .then(response => response.text())
-            .then(text => setDefaultValue(text))
-            .catch(error => console.error('Error loading default file:', error));
-    }, []);
+        setDefaultValue(code)
+        if (editorRef.current) {
+            editorRef.current.setValue(code);
+            editorRef.current.getModel().setLanguage(language);
+        }
+    }, [code, editorRef, language])
 
     function handleEditorDidMount(editor) {
         editorRef.current = editor;
@@ -29,14 +32,29 @@ function VimEditor({ nextStep, showAnswer, editorRef }) {
         editor.onDidCompositionStart(compositionStart);
         editor.onDidCompositionEnd(compositionEnd);
 
-
         window.require(["monaco-vim"], function (MonacoVim) {
             const statusNode = document.querySelector(".status-node");
-            MonacoVim.initVimMode(editor, statusNode);
+            const mode = MonacoVim.initVimMode(editor, statusNode);
 
+            const handleKeyPress = (key) => {
+                if (status === "insert" || !currentStepRef.current) return;
+                const answer = currentStepRef.current.command;
+                buffer.current = (buffer.current + key).slice(-answer.length);
+                console.log(buffer.current, answer)
+                if (buffer.current === answer) {
+                    nextStep();
+                }
+            };
+
+            mode.on("vim-mode-change", (mode) => {
+                setStatus(mode);
+            });
+            mode.on("vim-keypress", handleKeyPress);
             // Add a custom command
             MonacoVim.VimMode.Vim.defineEx("help", "h", showAnswer);
             MonacoVim.VimMode.Vim.defineEx("next", "n", nextStep);
+
+
 
             // Add autocomplete off to the status node
             const observer = new MutationObserver((mutations) => {
@@ -65,7 +83,7 @@ function VimEditor({ nextStep, showAnswer, editorRef }) {
         <div style={{ pointerEvents: 'none' }}>
             <Editor
                 height="82vh"
-                language="json"
+                language="python"
                 wrapperClassName='something'
                 onMount={handleEditorDidMount}
                 defaultValue={defaultValue}

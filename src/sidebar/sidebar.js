@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import Steps from './steps';
 
-const Sidebar = forwardRef(({ steps, stepShown, answerShown }, ref) => {
+const Sidebar = forwardRef(({ steps, title, stepShown, answerShown }, ref) => {
     const stepsRef = useRef(null);
 
     useEffect(() => {
@@ -27,8 +27,8 @@ const Sidebar = forwardRef(({ steps, stepShown, answerShown }, ref) => {
 
     return (
         <div className="flex flex-col h-full">
-            <h1 className="text-2xl font-bold mb-4">Steps</h1>
-            <p className="text-base mb-4">A specific task in vim</p>
+            <h1 className="text-2xl font-bold mb-4">{title}</h1>
+            {/* <p className="text-base mb-4"></p> */}
 
             <div className="flex-grow overflow-auto scrollbar-hide" ref={stepsRef}>
                 <div className="steps">
