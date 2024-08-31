@@ -17,7 +17,7 @@ export default function Steps({ steps, stepShown, answerShown }) {
                             className="group relative flex cursor-pointer rounded-lg bg-white/5 py-4 px-5 text-white shadow-md transition focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-white/10 group-data-[checked]:animate-greenFlash"
                         >
                             <div className="flex w-full items-center justify-between ">
-                                <div className="text-sm/6">
+                                <div>
                                     <p className="font-semibold text-white">{index + 1}/{steps.length}</p>
                                     <div className="flex gap-2 text-white/50 pb-1">
                                         <div>{step.description}</div>

@@ -41,6 +41,7 @@ function App() {
     const fetchChallengeData = () => {
       if (fetchedRef.current) return; // Skip if already fetched
       fetchedRef.current = true;
+      setCode("Loading...")
 
       fetch('https://rvc-server.ooonefolder.workers.dev/api/random_challenge')
         .then(response => response.json())
@@ -106,10 +107,10 @@ function App() {
     <div className="App bg-stone-950 text-white min-h-screen flex flex-col p-4">
       <Header className="w-full h-16" />
       <div className="flex flex-1 p-2 space-x-6 flex-col md:flex-row">
-        <div className="w-full md:w-4/5 p-4 rounded-lg bg-[#1e1e1e] mb-4 md:mb-0 max-h-[90vh] overflow-y-auto">
+        <div className="w-full md:w-2/3 p-4 rounded-lg bg-[#1e1e1e] mb-4 md:mb-0 max-h-[90vh] overflow-y-auto">
           <VimEditor nextStep={nextStep} showAnswer={showAnswer} editorRef={editorRef} code={code} language={language} currentStepRef={currentStepRef} buffer={buffer} />
         </div>
-        <div className="w-full md:w-1/5 p-4 rounded-lg bg-[#1e1e1e] max-h-[90vh] overflow-y-auto">
+        <div className="w-full md:w-1/3 p-4 rounded-lg bg-[#1e1e1e] max-h-[90vh] overflow-y-auto">
           <Sidebar ref={sidebarRef} steps={steps} title={title} stepShown={stepShown} answerShown={answerShown} />
         </div>
       </div>
