@@ -92,6 +92,7 @@ function VimEditor({ nextStep, showAnswer, editorRef, code, language, currentSte
                     minimap: {
                         enabled: false,
                     },
+                    fontSize: 17,
                     acceptSuggestionOnCommitCharacter: false,
                     acceptSuggestionOnEnter: false,
                     mouseWheelZoom: false,

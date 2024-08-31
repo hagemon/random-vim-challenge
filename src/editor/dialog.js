@@ -9,6 +9,8 @@ export default function FinishDialog({ showDialog, setShowDialog, dialogRef }) {
   function handleKeyDown(e) {
     if (e.key === 'Enter' || e.key === 'Escape') {
       close();
+    } else if (e.key === 'n') {
+      window.location.reload();
     }
   }
 
@@ -36,7 +38,7 @@ export default function FinishDialog({ showDialog, setShowDialog, dialogRef }) {
                 You have completed the challenge!
               </p>
               <p className="mt-2 text-base/6 text-white/50">
-                Refresh to try another one.
+                Refresh to try next one.
               </p>
               <div className="mt-4">
                 <Button
@@ -44,6 +46,14 @@ export default function FinishDialog({ showDialog, setShowDialog, dialogRef }) {
                   onClick={close}
                 >
                   Got it! <span className="ml-1">↵</span>
+                </Button>
+                <Button
+                  className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-base/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700 ml-2"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  Next <span className="ml-1">n</span>
                 </Button>
               </div>
             </DialogPanel>
